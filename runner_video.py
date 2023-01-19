@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
 
 	def player_input(self):
 		keys = pygame.key.get_pressed()
-		if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+		if keys[pygame.K_SPACE or keys[pygame.K_UP]] and self.rect.bottom >= 300:
 			self.gravity = -20
 			self.jump_sound.play()
 
