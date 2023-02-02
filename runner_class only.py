@@ -20,15 +20,15 @@ class Player(pygame.sprite.Sprite):
 
 	def player_input(self):
 		keys = pygame.key.get_pressed()
-		if (keys[pygame.K_UP] or keys[pygame.K_SPACE]) and self.rect.bottom >= 300:
-			self.gravity = -20
+		if (keys[pygame.K_UP] or keys[pygame.K_SPACE]): 
+			self.gravity = -5 #jump height is lower
 			self.jump_sound.play() 				
 
 	def apply_gravity(self):
 		self.gravity += 1
 		self.rect.y += self.gravity
-		if self.rect.bottom >= 300:
-			self.rect.bottom = 300
+		if self.rect.bottom >= 400: #player runs at bottom of window
+			self.rect.bottom = 400
 
 	def animation_state(self):
 		if self.rect.bottom < 300: 
@@ -76,23 +76,15 @@ class Obstacle(pygame.sprite.Sprite):
 		if self.rect.x <= -100: 
 			self.kill()
 
-def display_score():
-	current_time = int(pygame.time.get_ticks() / 1000) - start_time
-	score_surf = test_font.render(f'Score: {current_time}',False,(64,64,64))
+def display_score(score): #display score while game is played
+	score_surf = test_font.render(f'Score: {score}',False,(64,64,64))
 	score_rect = score_surf.get_rect(center = (400,50))
 	screen.blit(score_surf,score_rect)
-	return current_time
-
-def collision_sprite():
-	if pygame.sprite.spritecollide(player.sprite,obstacle_group,False):
-		obstacle_group.empty()
-		return False
-	else: return True
-
+	return score
 
 pygame.init()
 screen = pygame.display.set_mode((800,400))
-pygame.display.set_caption('Runner')
+pygame.display.set_caption('Alien Runner') #new title
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
@@ -115,7 +107,7 @@ player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alp
 player_stand = pygame.transform.rotozoom(player_stand,0,2)
 player_stand_rect = player_stand.get_rect(center = (400,200))
 
-game_name = test_font.render('Pixel Runner',False,(111,196,169))
+game_name = test_font.render('Alien Runner',False,(111,196,169)) #changed game name
 game_name_rect = game_name.get_rect(center = (400,80))
 
 game_message = test_font.render('Press space to run',False,(111,196,169))
@@ -131,29 +123,31 @@ while True:
 			pygame.quit()
 			exit()
 
-		if game_active:
+		if game_active: 
 			if event.type == obstacle_timer:
 				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail'])))
-		
 		else:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				game_active = True
+				score = 0 # set score to 0 when game restarts
 				start_time = int(pygame.time.get_ticks() / 1000)
-
-
+     
 	if game_active:
 		screen.blit(sky_surface,(0,0))
 		screen.blit(ground_surface,(0,300))
-		score = display_score()
-		
-		player.draw(screen)
-		player.update()
+		score = display_score(score)
 
+		player.draw(screen)
+		player.update()		
+        
 		obstacle_group.draw(screen)
 		obstacle_group.update()
 
-		game_active = collision_sprite()
-		
+		for obstacle in obstacle_group:
+			if pygame.sprite.spritecollide(player.sprite,obstacle_group,True): #score goes up every time an alien is captured	
+				score += 10 
+			if obstacle.rect.left < 0:
+				game_active = False	
 	else:
 		screen.fill((94,129,162))
 		screen.blit(player_stand,player_stand_rect)
@@ -164,6 +158,8 @@ while True:
 
 		if score == 0: screen.blit(game_message,game_message_rect)
 		else: screen.blit(score_message,score_message_rect)
+		obstacle_group = pygame.sprite.Group() #aliens are placed in new positions (compared to when game ended) when game restarts
 
-	pygame.display.update()
+
+	pygame.display.update()  
 	clock.tick(60)
