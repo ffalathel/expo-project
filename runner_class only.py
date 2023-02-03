@@ -1,3 +1,7 @@
+#This code originally comes from https://github.com/clear-code-projects/UltimatePygameIntro
+#Several modifications were made by Fahada Alathel, Pravalika Eluka, and Alanah Haynes
+#February 3, 2023
+
 import pygame
 from sys import exit
 from random import randint, choice
