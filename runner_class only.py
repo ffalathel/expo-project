@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
 		self.jump_sound.set_volume(0.5)
 
-	def player_input(self):
+	def player_input(self): #controls to make the alien jump/ starting level of the alien
 		keys = pygame.key.get_pressed()
 		if (keys[pygame.K_UP] or keys[pygame.K_SPACE]): 
 			self.gravity = -5 #jump height is lower
