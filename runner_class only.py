@@ -94,7 +94,8 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
-bg_music = pygame.mixer.Sound('audio/music.wav')
+obstacle_amount=0
+bg_music = pygame.mixer.Sound('audio/alienmusic.mp3')
 bg_music.play(loops = -1)
 
 #Groups
@@ -103,8 +104,9 @@ player.add(Player())
 
 obstacle_group = pygame.sprite.Group()
 
-sky_surface = pygame.image.load('graphics/Sky.png').convert()
-ground_surface = pygame.image.load('graphics/ground.png').convert()
+sky_surface = pygame.image.load('graphics/Sky_EXPO1.png').convert()
+ground_surface = pygame.image.load('graphics/Ground_EXPO.png').convert()
+
 
 # Intro screen
 player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alpha()
@@ -130,6 +132,14 @@ while True:
 		if game_active: 
 			if event.type == obstacle_timer:
 				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail'])))
+
+
+				if obstacle_amount<1500:
+					obstacle_amount= obstacle_amount + 100 #CHANGE; additional line
+					pygame.time.set_timer(obstacle_timer,1500 - obstacle_amount)#additional line
+				if obstacle_amount>=1500:
+					pygame.time.set_timer(obstacle_timer,200)	#additonal line
+
 		else:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				game_active = True

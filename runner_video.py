@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
 		self.gravity = 0
 
 		self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-		self.jump_sound.set_volume(0.5)
+		self.jump_sound.set_volume(0.3)
 
 	def player_input(self):
 		keys = pygame.key.get_pressed()
@@ -127,7 +127,8 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
-bg_music = pygame.mixer.Sound('audio/music.wav')
+obstacle_amount=0
+bg_music = pygame.mixer.Sound('audio/alienmusic.mp3')
 bg_music.play(loops = -1)
 
 #Groups
@@ -136,8 +137,8 @@ player.add(Player())
 
 obstacle_group = pygame.sprite.Group()
 
-sky_surface = pygame.image.load('graphics/Sky.png').convert()
-ground_surface = pygame.image.load('graphics/ground.png').convert()
+sky_surface = pygame.image.load('graphics/Sky_EXPO1.png').convert()
+ground_surface = pygame.image.load('graphics/Ground_EXPO.png').convert()
 
 # score_surf = test_font.render('My game', False, (64,64,64))
 # score_rect = score_surf.get_rect(center = (400,50))
@@ -213,6 +214,8 @@ while True:
 		if game_active:
 			if event.type == obstacle_timer:
 				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail'])))
+
+				
 				# if randint(0,2):
 				# 	obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900,1100),300)))
 				# else:
