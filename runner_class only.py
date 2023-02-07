@@ -144,6 +144,8 @@ while True:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				game_active = True
 				score = 0 # set score to 0 when game restarts
+				obstacle_amount= 200 #start it at normal speed when game restarts
+				pygame.time.set_timer(obstacle_timer,1500-obstacle_amount) 
 				start_time = int(pygame.time.get_ticks() / 1000)
      
 	if game_active:
@@ -172,8 +174,8 @@ while True:
 
 		if score == 0: screen.blit(game_message,game_message_rect)
 		else: screen.blit(score_message,score_message_rect)
+
 		obstacle_group = pygame.sprite.Group() #aliens are placed in new positions (compared to when game ended) when game restarts
-
-
+    	
 	pygame.display.update()  
 	clock.tick(60)
